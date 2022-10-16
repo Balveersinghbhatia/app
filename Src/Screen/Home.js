@@ -3,6 +3,9 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Dashboard from "./Dashboard";
 import { primaryGreen } from "../../Configs/colors";
 import TreeIndividual from "../Screen/TreeIndividual";
+import Shop from "./Shop";
+import Profile from "./Profile";
+import Cart from "./CartScreen";
 const Home = () => {
   const Tab = createBottomTabNavigator();
 
@@ -39,14 +42,14 @@ const Home = () => {
           }}
         />
 
-        {/* Notification page */}
+        {/* Shop page */}
         <Tab.Screen
-          name="Notifications"
-          component={Dashboard}
+          name="shopPage"
+          component={Shop}
           options={{
             tabBarIcon: ({ color, focused }) => (
               <MaterialCommunityIcons
-                name="bell-ring"
+                name="home"
                 color={focused ? "#4c9e2f" : "gray"}
                 size={26}
               />
@@ -56,7 +59,7 @@ const Home = () => {
         {/* Settings page */}
         <Tab.Screen
           name="Settings"
-          component={Dashboard}
+          component={Profile}
           options={{
             tabBarIcon: ({ color, focused }) => (
               <MaterialCommunityIcons
@@ -70,7 +73,7 @@ const Home = () => {
         {/* Cart */}
         <Tab.Screen
           name="Cart"
-          component={Dashboard}
+          component={Cart}
           options={{
             tabBarIcon: ({ color, focused }) => (
               <MaterialCommunityIcons

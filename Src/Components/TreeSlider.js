@@ -5,7 +5,6 @@ import styles from "../Styles/style";
 import { Dimensions } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { useNavigation } from "@react-navigation/native";
-import ex from "../../assets/Tree slider/banyan-tree.jpg";
 const data = [
   {
     title: "Banyan Tree",

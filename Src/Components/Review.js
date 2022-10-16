@@ -5,7 +5,7 @@ import ReviewMessage from "./ReviewMessage";
 
 const Review = (props) => {
   const data = props.data;
-  console.log(data);
+  // console.log(data);
   return (
     <Box>
       <Heading bold fontSize={15} mb={2}>

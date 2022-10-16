@@ -7,35 +7,42 @@ import {
   TextInput,
   View,
   Pressable,
+  ToastAndroid,
 } from "react-native";
-import { primaryGreen } from "../../Configs/colors";
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { RFPercentage } from "react-native-responsive-fontsize";
 import { LinearGradient } from "expo-linear-gradient";
 const Login = ({ navigation }) => {
   const [showModal, setModal] = useState(false);
   const [screen, setScreen] = useState("get");
-  const handlePress = async () => {
-    let formData = new FormData();
-    formData.append("c_mob", number);
-    const option = {
-      method: "POST",
-      body: formData,
-    };
-    try {
-      let response = await fetch(
-        "http://test.maymornings.com/index.php/Api/Customers/sendotp",
-        option
-      );
-      let json = await response.json();
-      console.log(json);
-      // if json.status is 1 means otp send success
-      if (json.status === 1) {
-        await AsyncStorage.setItem("number", number);
+  const [number, onChangeNumber] = useState("");
+  const [otp, onChangeOtp] = useState("");
+  const handlePress = async () => {};
+  const handlePressNext = async () => {
+    if (number.length === 10) {
+      let formData = new FormData();
+      formData.append("c_mob", number);
+      const option = {
+        method: "POST",
+        body: formData,
+      };
+      try {
+        let response = await fetch(
+          "http://test.maymornings.com/index.php/Api/Customers/sendotp",
+          option
+        );
+        let json = await response.json();
+        console.log(json);
+        // if json.status is 1 means otp send success
+        if (json.status === 1) {
+          await AsyncStorage.setItem("number", number);
 
-        navigation.navigate("VerifyOtp");
+          setScreen("verify");
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      ToastAndroid.show("Invalid phone no!", ToastAndroid.SHORT);
     }
   };
   const handlePhonePress = () => {
@@ -47,21 +54,48 @@ const Login = ({ navigation }) => {
   const handlePressBackVerify = () => {
     setScreen("get");
   };
-  const handlePressNext = () => {
-    setScreen("verify");
-  };
-  const handlePressNextVerify = () => {
-    navigation.navigate("Home");
+
+  const handlePressNextVerify = async () => {
+    if (otp.length === 6) {
+      let formData = new FormData();
+      formData.append("c_mob", number);
+      formData.append("c_otp", otp);
+      const option = {
+        method: "POST",
+        body: formData,
+      };
+      try {
+        let response = await fetch(
+          "http://test.maymornings.com/index.php/Api/Customers/verifyotp",
+          option
+        );
+        let json = await response.json();
+        console.log(json);
+        // if json.status is 1 means otp send success
+        if (json.status === 1) {
+          await AsyncStorage.setItem("number", number);
+          await AsyncStorage.setItem("login", "true");
+          navigation.navigate("Home");
+        } else {
+          ToastAndroid.show("Invalid otp!", ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      ToastAndroid.show("Invalid otp!", ToastAndroid.SHORT);
+    }
   };
   const handleFbPress = () => {};
 
   const checkIfLogin = async () => {
     let login = await AsyncStorage.getItem("login");
-    if (login === "True") {
-      // navigation.navigate("Third");
+
+    if (login === "true") {
+      console.log("logged in already!");
+      navigation.navigate("Home");
     }
   };
-  const [number, onChangeNumber] = React.useState(null);
 
   useEffect(() => {
     checkIfLogin();
@@ -162,8 +196,8 @@ const Login = ({ navigation }) => {
                 </Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={onChangeNumber}
-                  value={number}
+                  onChangeText={onChangeOtp}
+                  value={otp}
                   placeholder="Insert the 6-digit code"
                   keyboardType="numeric"
                 />
